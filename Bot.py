@@ -183,5 +183,4 @@ async def resetBrowser():
     logging.info('Refreshed browser')
 
 
-client.run(BOT_TOKEN)
 bot.run(BOT_TOKEN)
