@@ -4,6 +4,8 @@ import sys
 import asyncio
 import logging
 
+client = discord.Client()
+
 from dotenv import load_dotenv
 from discord.ext import tasks, commands
 
@@ -16,6 +18,7 @@ from connect_and_launch import adblock
 from embeds import server_info_embed, help_embed
 
 from selenium.common.exceptions import ElementNotInteractableException
+
 
 # setup environment vars if .env doesn't exist
 if not os.path.exists(os.path.relpath(".env")):
@@ -180,4 +183,5 @@ async def resetBrowser():
     logging.info('Refreshed browser')
 
 
+client.run(BOT_TOKEN)
 bot.run(BOT_TOKEN)
