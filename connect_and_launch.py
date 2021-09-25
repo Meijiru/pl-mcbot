@@ -24,6 +24,9 @@ if headless:
 options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                      "AppleWebKit/537.36 (KHTML, like Gecko) "
                      "Chrome/87.0.4280.88 Safari/537.36")
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option('useAutomationExtension', False)
+options.add_argument("--disable-blink-features=AutomationControlled")
 
 driver = webdriver.Chrome(options=options, executable_path=binary_path)
 
@@ -50,9 +53,8 @@ async def start_server():
 
 def get_status():
     """ Returns the status of the server as a string."""
-    return driver.find_element_by_xpath('//*[@id="nope"]/main/section/div['
-                                        '3]/div[3]/div[1]/div/span['
-                                        '2]/span').text
+    return driver.find_element_by_css_selector('.statuslabel-label').text
+    #driver.find_element_by_xpath('//div[@class="body"]/main/section/div[@class="page-content page-server"]').text
 
 
 def get_number_of_players():
@@ -60,9 +62,10 @@ def get_number_of_players():
     """ Returns the number of players as a string.
         Works: When server is online--Returns 0 if offline"""
     try:
-        return driver.find_element_by_xpath('//*[@id="nope"]/main/section'
-                                            '/div[3]/div[5]/div[2]/div['
-                                            '1]/div[1]/div[2]/div[2]').text
+        return driver.find_element_by_css_selector('.live-status-box-value.js-players').text
+        #return driver.find_element_by_xpath('//*[@id="nope"]/main/section'
+        #                                    '/div[3]/div[5]/div[2]/div['
+        #                                    '1]/div[1]/div[2]/div[2]').text
     except NoSuchElementException:
         # Can't be 0/20 because max isn't always the same,
         # could maybe pull max players from options page
@@ -72,7 +75,7 @@ def get_number_of_players():
 def get_ip():
     """ Returns the severs IP address.
         Works: Always works"""
-    return driver.find_element_by_xpath('//*[@id="nope"]/main/section/div['
+    return driver.find_element_by_xpath('//div[@class="body"]/main/section/div['
                                         '3]/div[1]').text[:-8]
 
 
@@ -92,7 +95,7 @@ def get_tps():
     """ Returns the server TPS
         Works; When the server is online--Returns '0' if offline"""
     try:
-        return driver.find_element_by_xpath('//*[@id="nope"]/main/section'
+        return driver.find_element_by_xpath('//div[@class="body"]/main/section'
                                             '/div[3]/div[5]/div[2]/div['
                                             '1]/div[3]/div[2]/div[2]').text
     except NoSuchElementException:
@@ -121,11 +124,9 @@ def connect_account():
     time.sleep(2)
 
     # selects server from server list
-    element = driver.find_element_by_css_selector('body > div > main > section'
-                                                  '> div > div.servers.single '
-                                                  '> div > div.server-body')
+    element = driver.find_element_by_css_selector('div.body > main > section > div > div.servers.single > div > div.server-body')
     element.click()
-
+    #driver.find_element_by_xpath("/html/body/")
     # by passes the 3 second adblock
     if adblock:
         adblockBypass()

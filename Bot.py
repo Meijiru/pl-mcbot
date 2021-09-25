@@ -124,26 +124,6 @@ async def info(ctx):
     await ctx.send(embed=server_info_embed())
 
 
-@bot.command()
-async def stop(ctx):
-    server_status = get_status()
-
-    if server_status != 'Stopping ...' and server_status != 'Saving ...' and \
-            server_status != 'Offline' and server_status != 'Loading ...':
-        await ctx.send("Stopping the server...")
-        await stop_server()
-
-        # logs event to console
-        logging.info(f'Server stopped by: '
-                     f'{ctx.author.name}#{ctx.author.discriminator}')
-
-    elif server_status == 'Loading ...':
-        await ctx.send(f"The server is currently loading. "
-                       f"Please try again later.")
-
-    else:
-        await ctx.send("The server is already Offline.")
-
 
 @bot.command()
 async def help(ctx):
