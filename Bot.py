@@ -9,7 +9,6 @@ client = discord.Client()
 from dotenv import load_dotenv
 from discord.ext import tasks, commands
 
-from Configure import launch_config
 from connect_and_launch import get_status, get_number_of_players, \
                                get_ip, get_tps
 from connect_and_launch import connect_account, adblockBypass, refreshBrowser
