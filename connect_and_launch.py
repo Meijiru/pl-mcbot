@@ -146,7 +146,6 @@ def connect():
     """ Connects to the accounts through a headless chrome tab so we don't
         have to do it every time we want to start or stop the server."""
     # login to aternos
-    print(driver.title)
 
         
     element = driver.find_element_by_xpath('//*[@id="user"]')
@@ -254,10 +253,15 @@ def solve_images(driver):
 
 def recaptcha_process(driver):
     try:
+        ids = find_elements_by_xpath("//*[@id]")
+        for ii in ids:
+            print(ii.get_attribute("id"))
+
         # move the driver to the first iFrame
         # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[0])
         driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[0])
 
+        print(driver.title)
         # *************  locate CheckBox  **************
         CheckBox = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "recaptcha-anchor"))
@@ -266,6 +270,7 @@ def recaptcha_process(driver):
 
         # *************  click CheckBox  ***************
         # making click on captcha CheckBox
+        print(driver.title)
         CheckBox.click()
 
         # ***************** back to main window **************************************
