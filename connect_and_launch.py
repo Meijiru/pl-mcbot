@@ -135,12 +135,12 @@ def waitUntil(condition, output): #defines function
 def connect_account():
     driver.get(URL)
     time.sleep(5)
-    #print(driver.title)
+    print(driver.title)
     if driver.title != "Attention Required! | Cloudflare":
-        connect()
+        #connect()
     else:
         recaptcha_process()
-        time.sleep(10)
+        time.sleep(70)
         #waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
 
 def connect():
@@ -155,8 +155,10 @@ def connect():
     element.send_keys(PASSWORD)
     element = driver.find_element_by_xpath('//*[@id="login"]')
     element.click()
-
-    print(driver.title)
+    
+    while driver.title != "Servers | Aternos | Free Minecraft Server":
+        time.sleep(5)
+        driver.refresh()
 
     # selects server from server list
     element = driver.find_element_by_css_selector('.server-body')
@@ -174,7 +176,7 @@ def connect():
 
 
 def adblockBypass():
-    time.sleep(1)
+    time.sleep(1)   
     element = driver.find_element_by_xpath('//*[@id="sXMbkZHTzeemhBrPtXgBD'
                                            'DwAboVOOFxHiMjcTsUwoIOJ"]/div/'
                                            'div/div[3]/div[2]/div[3]/div'
@@ -256,59 +258,55 @@ def solve_images():
 
 def recaptcha_process():
     print(driver.title)
-    try:
+    # move the driver to the first iFrame
+    # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[0])
+    driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[0])
 
-        # move the driver to the first iFrame
-        # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[0])
-        driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[0])
+    ids = find_elements_by_xpath("//*[@id]")
+    for ii in ids:
+        print(ii.get_attribute("id"))
+    # *************  locate CheckBox  **************
+    CheckBox = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "recaptcha-anchor"))
+        # EC.presence_of_element_located((By.CLASS_NAME, "recaptcha-checkbox-borderAnimation"))
+    )
 
-        ids = find_elements_by_xpath("//*[@id]")
-        for ii in ids:
-            print(ii.get_attribute("id"))
-        # *************  locate CheckBox  **************
-        CheckBox = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "recaptcha-anchor"))
-            # EC.presence_of_element_located((By.CLASS_NAME, "recaptcha-checkbox-borderAnimation"))
-        )
+    # *************  click CheckBox  ***************
+    # making click on captcha CheckBox
+    print(driver.title)
+    CheckBox.click()
 
-        # *************  click CheckBox  ***************
-        # making click on captcha CheckBox
-        print(driver.title)
-        CheckBox.click()
+    # ***************** back to main window **************************************
+    # driver.switch_to_window(mainWin)
+    driver.switch_to.window(mainWin)
 
-        # ***************** back to main window **************************************
+    wait_between(2.0, 2.5)
+
+    # ************ switch to the second iframe by tag name ******************
+    # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[1])
+    driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[1])
+    i = 1
+    while i < 300:
+        print('\n\r{0}-th loop'.format(i))
+        # ******** check if checkbox is checked at the 1st frame ***********
         # driver.switch_to_window(mainWin)
         driver.switch_to.window(mainWin)
+        WebDriverWait(driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it((By.TAG_NAME, 'iframe'))
+        )
+        wait_between(1.0, 2.0)
+        if check_exists_by_xpath('//span[@aria-checked="true"]'):
+            import winsound
 
-        wait_between(2.0, 2.5)
+            winsound.Beep(400, 1500)
+            write_stat(i, round(time() - start) - 1)  # saving results into stat file
+            break
 
-        # ************ switch to the second iframe by tag name ******************
+        # driver.switch_to_window(mainWin)
+        driver.switch_to.window(mainWin)
+        # ********** To the second frame to solve pictures *************
+        wait_between(0.3, 1.5)
         # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[1])
         driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[1])
-        i = 1
-        while i < 300:
-            print('\n\r{0}-th loop'.format(i))
-            # ******** check if checkbox is checked at the 1st frame ***********
-            # driver.switch_to_window(mainWin)
-            driver.switch_to.window(mainWin)
-            WebDriverWait(driver, 10).until(
-                EC.frame_to_be_available_and_switch_to_it((By.TAG_NAME, 'iframe'))
-            )
-            wait_between(1.0, 2.0)
-            if check_exists_by_xpath('//span[@aria-checked="true"]'):
-                import winsound
-
-                winsound.Beep(400, 1500)
-                write_stat(i, round(time() - start) - 1)  # saving results into stat file
-                break
-
-            # driver.switch_to_window(mainWin)
-            driver.switch_to.window(mainWin)
-            # ********** To the second frame to solve pictures *************
-            wait_between(0.3, 1.5)
-            # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[1])
-            driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[1])
-            solve_images(driver)
-            i = i + 1
-    except:
-        pass
+        solve_images(driver)
+        i = i + 1
