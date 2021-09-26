@@ -134,6 +134,8 @@ def waitUntil(condition, output): #defines function
 
 def connect_account():
     driver.get(URL)
+    time.sleep(5)
+    print(driver.title)
     if driver.title != "Attention Required! | Cloudflare":
         connect()
     else:
@@ -145,12 +147,7 @@ def connect():
         have to do it every time we want to start or stop the server."""
     # login to aternos
     
-    print(driver.title)
 
-    while driver.title != "Login or Sign up | Aternos | Free Minecraft Server":
-        time.sleep(5)
-        print(driver.title) 
-        driver.refresh()
         
     element = driver.find_element_by_xpath('//*[@id="user"]')
     element.send_keys(USER)
