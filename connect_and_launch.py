@@ -133,17 +133,18 @@ def waitUntil(condition, output): #defines function
         time.sleep(60) #waits 60s for preformance
 
 def connect_account():
-    if driver.title == "Attention Required! | Cloudflare":
+    driver.get(URL)
+    if driver.title != "Attention Required! | Cloudflare":
+        connect()
+    else:
         recaptcha_process(driver)
         waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
-    
 
 def connect():
     """ Connects to the accounts through a headless chrome tab so we don't
         have to do it every time we want to start or stop the server."""
     # login to aternos
     
-    driver.get(URL)
     print(driver.title)
 
     while driver.title != "Login or Sign up | Aternos | Free Minecraft Server":
