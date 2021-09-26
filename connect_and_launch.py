@@ -2,6 +2,7 @@ import asyncio
 import time
 import os
 import logging
+import undetected_chromedriver as uc
 
 from selenium import webdriver
 from selenium.common.exceptions import ElementNotInteractableException, \
@@ -11,7 +12,7 @@ from chromedriver_py import binary_path
 
 load_dotenv()
 USER = "NyceTurtle"
-PASSWORD = "Apr_72006"
+PASSWORD = "Apr72006"
 URL = "https://aternos.org/go/"
 
 # chrome variables
@@ -28,8 +29,15 @@ options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option('useAutomationExtension', False)
 options.add_argument("--disable-blink-features=AutomationControlled")
 
-driver = webdriver.Chrome(options=options, executable_path=binary_path)
+driver = uc.Chrome(options=options)
 
+def waitUntil(condition, output): #defines function
+    wU = True
+    while wU == True:
+        if condition: #checks the condition
+            output
+            wU = False
+        time.sleep(60) #waits 60s for preformance
 
 async def start_server():
     """ Starts the server by clicking on the start button.
@@ -58,15 +66,16 @@ def get_status():
 
 
 def get_number_of_players():
-
+    
+    status = driver.find_element_by_css_selector('.statuslabel-label').text
     """ Returns the number of players as a string.
         Works: When server is online--Returns 0 if offline"""
-    try:
+    if status == "Online":
         return driver.find_element_by_css_selector('.live-status-box-value.js-players').text
         #return driver.find_element_by_xpath('//*[@id="nope"]/main/section'
         #                                    '/div[3]/div[5]/div[2]/div['
         #                                    '1]/div[1]/div[2]/div[2]').text
-    except NoSuchElementException:
+    else:
         # Can't be 0/20 because max isn't always the same,
         # could maybe pull max players from options page
         return '0'
@@ -75,8 +84,7 @@ def get_number_of_players():
 def get_ip():
     """ Returns the severs IP address.
         Works: Always works"""
-    return driver.find_element_by_xpath('//div[@class="body"]/main/section/div['
-                                        '3]/div[1]').text[:-8]
+    return driver.find_element_by_xpath('//span[@id="ip"]').text
 
 
 def get_software():
@@ -95,9 +103,7 @@ def get_tps():
     """ Returns the server TPS
         Works; When the server is online--Returns '0' if offline"""
     try:
-        return driver.find_element_by_xpath('//div[@class="body"]/main/section'
-                                            '/div[3]/div[5]/div[2]/div['
-                                            '1]/div[3]/div[2]/div[2]').text
+        return driver.find_element_by_css_selector('."live-status-box-value.js-tps"').text
     except NoSuchElementException:
         return '0'
 
@@ -109,23 +115,40 @@ def get_server_info():
     return get_ip(), get_status(), get_number_of_players(), \
            get_software(), get_version(), get_tps()
 
-
 def connect_account():
     """ Connects to the accounts through a headless chrome tab so we don't
         have to do it every time we want to start or stop the server."""
-    driver.get(URL)
     # login to aternos
+    
+    driver.get(URL)
+    print(driver.title)
+    while driver.title != "Login or Sign up | Aternos | Free Minecraft Server":
+        time.sleep(5)
+        print(driver.title) 
+        driver.refresh()
+    
     element = driver.find_element_by_xpath('//*[@id="user"]')
     element.send_keys(USER)
     element = driver.find_element_by_xpath('//*[@id="password"]')
     element.send_keys(PASSWORD)
     element = driver.find_element_by_xpath('//*[@id="login"]')
     element.click()
-    time.sleep(2)
+    while driver.title != "Servers | Aternos | Free Minecraft Server" :
+        time.sleep(5)
+        print(driver.title)
+        driver.refresh()
 
     # selects server from server list
-    element = driver.find_element_by_css_selector('div.body > main > section > div > div.servers.single > div > div.server-body')
+    element = driver.find_element_by_css_selector('.server-body')
     element.click()
+    
+    time.sleep(2)
+    
+    while driver.title != "Server | Aternos | Free Minecraft Server" :
+        time.sleep(5)
+        print(driver.title)
+        driver.refresh()
+    
     #driver.find_element_by_xpath("/html/body/")
     # by passes the 3 second adblock
     if adblock:

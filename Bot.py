@@ -21,13 +21,13 @@ from selenium.common.exceptions import ElementNotInteractableException
 
 
 # setup environment vars if .env doesn't exist
-if not os.path.exists(os.path.relpath(".env")):
-    launch_config()
-    sys.exit()
+#if not os.path.exists(os.path.relpath(".env")):
+#    launch_config()
+#    sys.exit()
 
 # load environment vars
-load_dotenv()
-BOT_TOKEN = "ODkwOTYyNjU1NjI2NTUxMzI2.YU3bog.M9rbq6p1NqShuHivahjXIwCf97Q"
+#load_dotenv()
+BOT_TOKEN = "ODkxMTk0NDUxMzc5MjI4Njky.YU6zgg.szVwrEUjG4yYHPxw9qnYDAP389Q"
 
 # setup logger
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s',
@@ -53,7 +53,7 @@ async def on_ready():
 
     connect_account()  # logs into aternos
     logging.info(f'The bot is logged in as: {bot.user}')
-    await asyncio.sleep(2)
+    await asyncio.sleep(3)
     serverStatus.start()  # starts the presence update loop
 
     # starts adblock loop if network adblock is on
@@ -135,12 +135,11 @@ async def help(ctx):
 async def serverStatus():
     server_status = get_status()
     if server_status == "Online":
-        text = f"Server: {get_status()} | " \
+        text = f"{get_status()} | " \
                f"Players: {get_number_of_players()} | " \
-               f"TPS: {get_tps()} | " \
-               f"--help"
+               f"TPS: {get_tps()} | "
     else:
-        text = f"Server: {get_status()} | " \
+        text = f"{get_status()} | " \
                f"{get_ip()} | " \
                f"--help"
     activity = discord.Activity(type=discord.ActivityType.watching, name=text)
@@ -154,6 +153,34 @@ async def adblockWall():
     except ElementNotInteractableException:
         pass
 
+@bot.command()
+async def stop(ctx):
+    server_status = get_status()
+
+    if server_status != 'Stopping ...' and server_status != 'Saving ...' and \
+            server_status != 'Offline' and server_status != 'Loading ...':
+        
+        if len(ctx.message.mentions) == 0:
+            author = ctx.author
+        else:
+            author = ctx.message.mentions[0]
+
+        if author.name == "NyceTurtle":
+            await ctx.send("Stopping the server...")
+            await stop_server()
+            # logs event to console
+            logging.info(f'Server stopped by: '
+                        f'{ctx.author.name}#{ctx.author.discriminator}')
+        else:
+            await ctx.send(f"{author.mention}, You're not allowed to do that!")
+        
+
+    elif server_status == 'Loading ...':
+        await ctx.send(f"The server is currently loading. "
+                       f"Please try again later.")
+
+    else:
+        await ctx.send("The server is already Offline.")
 
 @tasks.loop(hours=1.0)
 async def resetBrowser():
