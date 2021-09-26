@@ -1,5 +1,5 @@
 import asyncio
-from time import time
+import time
 import os
 import logging
 import undetected_chromedriver as uc
