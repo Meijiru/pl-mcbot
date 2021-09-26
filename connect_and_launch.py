@@ -1,5 +1,5 @@
 import asyncio
-from time import sleep, time
+from time import time
 import os
 import logging
 import undetected_chromedriver as uc
@@ -224,7 +224,7 @@ def check_exists_by_xpath(xpath):
 
 def wait_between(a, b):
     rand = uniform(a, b)
-    sleep(rand)
+    time.sleep(rand)
 
 def dimention(driver):
     d = int(driver.find_element_by_xpath('//div[@id="rc-imageselect-target"]/table').get_attribute("class")[-1]);
