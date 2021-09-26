@@ -135,12 +135,13 @@ def waitUntil(condition, output): #defines function
 def connect_account():
     driver.get(URL)
     time.sleep(5)
-    print(driver.title)
+    #print(driver.title)
     if driver.title != "Attention Required! | Cloudflare":
         connect()
     else:
         recaptcha_process(driver)
-        waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
+        time.sleep(10)
+        #waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
 
 def connect():
     """ Connects to the accounts through a headless chrome tab so we don't
