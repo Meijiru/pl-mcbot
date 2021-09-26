@@ -136,8 +136,7 @@ def connect_account():
     if driver.title == "Attention Required! | Cloudflare":
         recaptcha_process(driver)
         waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
-    else:
-        connect()
+    
 
 def connect():
     """ Connects to the accounts through a headless chrome tab so we don't
