@@ -28,8 +28,11 @@ options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option('useAutomationExtension', False)
 options.add_argument("--disable-blink-features=AutomationControlled")
+options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--no-sandbox")
 
-driver = uc.Chrome(options=options)
+driver = uc.Chrome(options=options,executable_path=os.environ.get("CHROMEDRIVER_PATH"))
 
 def waitUntil(condition, output): #defines function
     wU = True
