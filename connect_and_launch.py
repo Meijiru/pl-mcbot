@@ -139,7 +139,7 @@ def connect_account():
     if driver.title != "Attention Required! | Cloudflare":
         connect()
     else:
-        recaptcha_process(driver)
+        recaptcha_process()
         time.sleep(10)
         #waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
 
@@ -217,17 +217,17 @@ def wait_between(a, b):
     rand = uniform(a, b)
     time.sleep(rand)
 
-def dimention(driver):
+def dimention():
     d = int(driver.find_element_by_xpath('//div[@id="rc-imageselect-target"]/table').get_attribute("class")[-1]);
     return d if d else 3  # dimention is 3 by default
 
 
 # ***** main procedure to identify and submit picture solution
-def solve_images(driver):
+def solve_images():
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "rc-imageselect-target"))
     )
-    dim = dimention(driver)
+    dim = dimention()
     # ****************** check if there is a clicked tile ******************
     if check_exists_by_xpath(
             '//div[@id="rc-imageselect-target"]/table/tbody/tr/td[@class="rc-imageselect-tileselected"]'):
@@ -238,7 +238,7 @@ def solve_images(driver):
     # wait before click on tiles
     wait_between(0.5, 1.0)
     # ****************** click on a tile ******************
-    tile1 = WebDriverWait(driver, 10).until(
+    tile1 = WebDriverWait( 10).until(
         EC.element_to_be_clickable((By.XPATH, '//div[@id="rc-imageselect-target"]/table/tbody/tr[{0}]/td[{1}]'.format(
             randint(1, dim), randint(1, dim))))
     )
@@ -254,17 +254,17 @@ def solve_images(driver):
     # ****************** click on submit buttion ******************
     driver.find_element_by_id("recaptcha-verify-button").click()
 
-def recaptcha_process(driver):
+def recaptcha_process():
+    print(driver.title)
     try:
-        ids = find_elements_by_xpath("//*[@id]")
-        for ii in ids:
-            print(ii.get_attribute("id"))
 
         # move the driver to the first iFrame
         # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[0])
         driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[0])
 
-        print(driver.title)
+        ids = find_elements_by_xpath("//*[@id]")
+        for ii in ids:
+            print(ii.get_attribute("id"))
         # *************  locate CheckBox  **************
         CheckBox = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "recaptcha-anchor"))
@@ -312,4 +312,3 @@ def recaptcha_process(driver):
             i = i + 1
     except:
         pass
-    return driver
