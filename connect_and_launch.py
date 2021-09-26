@@ -146,7 +146,7 @@ def connect():
     """ Connects to the accounts through a headless chrome tab so we don't
         have to do it every time we want to start or stop the server."""
     # login to aternos
-    
+    print(driver.title)
 
         
     element = driver.find_element_by_xpath('//*[@id="user"]')
