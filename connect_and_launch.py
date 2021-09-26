@@ -124,20 +124,33 @@ def get_server_info():
     return get_ip(), get_status(), get_number_of_players(), \
            get_software(), get_version(), get_tps()
 
+def waitUntil(condition, output): #defines function
+    wU = True
+    while wU == True:
+        if condition: #checks the condition
+            output
+            wU = False
+        time.sleep(60) #waits 60s for preformance
+
 def connect_account():
+    if driver.title == "Attention Required! | Cloudflare":
+        recaptcha_process(driver)
+        waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
+    else:
+        connect()
+
+def connect():
     """ Connects to the accounts through a headless chrome tab so we don't
         have to do it every time we want to start or stop the server."""
     # login to aternos
     
     driver.get(URL)
     print(driver.title)
-    if driver.title == "Attention Required! | Cloudflare":
-        recaptcha_process(driver)
-    else:
-        while driver.title != "Login or Sign up | Aternos | Free Minecraft Server":
-            time.sleep(5)
-            print(driver.title) 
-            driver.refresh()
+
+    while driver.title != "Login or Sign up | Aternos | Free Minecraft Server":
+        time.sleep(5)
+        print(driver.title) 
+        driver.refresh()
         
     element = driver.find_element_by_xpath('//*[@id="user"]')
     element.send_keys(USER)
