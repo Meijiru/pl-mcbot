@@ -155,10 +155,6 @@ def connect():
     element.send_keys(PASSWORD)
     element = driver.find_element_by_xpath('//*[@id="login"]')
     element.click()
-    while driver.title != "Servers | Aternos | Free Minecraft Server" :
-        time.sleep(5)
-        print(driver.title)
-        driver.refresh()
 
     # selects server from server list
     element = driver.find_element_by_css_selector('.server-body')
@@ -166,10 +162,6 @@ def connect():
     
     time.sleep(2)
     
-    while driver.title != "Server | Aternos | Free Minecraft Server" :
-        time.sleep(5)
-        print(driver.title)
-        driver.refresh()
     
     #driver.find_element_by_xpath("/html/body/")
     # by passes the 3 second adblock
