@@ -156,6 +156,8 @@ def connect():
     element = driver.find_element_by_xpath('//*[@id="login"]')
     element.click()
 
+    print(driver.title)
+
     # selects server from server list
     element = driver.find_element_by_css_selector('.server-body')
     element.click()
