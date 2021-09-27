@@ -92,7 +92,7 @@ async def launch(ctx):
     elif server_status == "Online":
         await ctx.send("The server is already Online.")
 
-    elif server_status == "Server will be prepaired" or server_status == "Server is Starting" or server_status == "Queue":
+    elif server_status == "Server will be prepaired" or server_status == "Server is starting" or server_status == "Queue":
         await ctx.send("The server is already starting...")
 
     elif server_status == "Stopping ..." or server_status == "Saving":
@@ -155,7 +155,7 @@ async def stop(ctx):
     server_status = get_status()
 
     if server_status != 'Stopped' and server_status != 'Saving' and \
-            server_status != 'Offline' and server_status != 'Server is Starting':
+            server_status != 'Offline' and server_status != 'Server is starting':
         
         if len(ctx.message.mentions) == 0:
             author = ctx.author
@@ -172,7 +172,7 @@ async def stop(ctx):
             await ctx.send(f"{author.mention}, You're not allowed to do that!")
         
 
-    elif server_status == 'Server is Starting':
+    elif server_status == 'Server is starting':
         await ctx.send(f"The server is currently loading. "
                        f"Please try again later.")
 

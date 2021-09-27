@@ -80,14 +80,14 @@ async def start_server():
             #print("cofirm")
             element = ""
             while element == "":
-                time.sleep(0.5)
+                await asyncio.sleep(3)
                 try:
                     element = driver.find_element_by_css_selector('.btn.btn-success')
                     element.send_keys(Keys.RETURN)
                 except:
                     pass
 
-            
+            return
             #driver.execute_script("arguments[0].scrollIntoView();", element)
             #driver.execute_script("arguments[0].queueServer(this,1);", element)
 
@@ -101,8 +101,8 @@ async def start_server():
 
 def get_status():
     """ Returns the status of the server as a string."""
+    ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
     try:
-        ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
         #print(f"{ms_status} yo over here")
         
         return ms_status
