@@ -70,7 +70,7 @@ async def launch(ctx):
     server_status = get_status()
 
     if server_status == "Offline" or server_status == "Stopped":
-        await ctx.send("Starting the server...")
+        await ctx.send("Starting the server. \n This might take a while...")
         await start_server()
 
         # if pinging a person, server will ping them when launching
@@ -139,8 +139,7 @@ async def serverStatus():
         text = f"{server_status} | " \
                f"{get_ip()}"
     elif server_status == "Queued":
-        server_status == f"Queued {get_queue()}"
-        text = f"{server_status} | " \
+        text = f"Queued {get_queue()} | " \
                f"{get_ip()}"
     else:
         text = f"{server_status} | " \
