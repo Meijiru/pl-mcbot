@@ -73,6 +73,7 @@ async def start_server():
     #driver.execute_script('hideAlert();')
     # server state span
     while get_status() != "Online":
+        await asyncio.sleep(3)
         # while in queue, check for the confirm button and try click it
         
         if get_status() == "Waiting for confirmation":
