@@ -6,20 +6,23 @@ import undetected_chromedriver as uc
 
 from selenium import webdriver
 from selenium.common.exceptions import ElementNotInteractableException, \
-                                       NoSuchElementException
+                                       NoSuchElementException, StaleElementReferenceException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions
+
 from dotenv import load_dotenv
 import re, csv
 from random import uniform, randint
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 
 
 load_dotenv()
-USER = "NyceTurtle"
+USER = "sulfur"
 PASSWORD = "Apr72006"
-URL = "https://aternos.org/go/"
+URL = "https://ploudos.com/login/"
 
 # chrome variables
 adblock = False  # for those with network wide ad blockers
@@ -52,31 +55,64 @@ async def start_server():
     """ Starts the server by clicking on the start button.
         The try except part tries to find the confirmation button, and if it
         doesn't, it continues to loop until the confirm button is clicked."""
-    element = driver.find_element_by_xpath("//*[@id=\"start\"]")
-    element.click()
+    element = ""
+    while element == "":
+        time.sleep(0.5)
+        try:
+            element = driver.find_element_by_css_selector('.btn.btn-success')
+            element.send_keys(Keys.RETURN)
+        except:
+            pass
+
+    
+    result = True
+    
+    
     await asyncio.sleep(3)
     # hides the notification question
-    driver.execute_script('hideAlert();')
+    #driver.execute_script('hideAlert();')
     # server state span
-    while get_status() == "Waiting in queue":
+    while get_status() != "Online":
         # while in queue, check for the confirm button and try click it
-        await asyncio.sleep(3)
-        try:
-            element = driver.find_element_by_xpath('//*[@id="confirm"]')
-            element.click()
-        except ElementNotInteractableException:
-            pass
+        
+        if get_status() == "Waiting for confirmation":
+            print("cofirm")
+            element = ""
+            while element == "":
+                time.sleep(0.5)
+                try:
+                    element = driver.find_element_by_css_selector('.btn.btn-success')
+                    element.send_keys(Keys.RETURN)
+                except:
+                    pass
+
+            
+            #driver.execute_script("arguments[0].scrollIntoView();", element)
+            #driver.execute_script("arguments[0].queueServer(this,1);", element)
+
+            #element = ""
+            #while element == "":
+            #    time.sleep(0.5)
+            #    element = driver.find_element_by_css_selector('.btn.btn-success')
+            
+        
 
 
 def get_status():
     """ Returns the status of the server as a string."""
-    return driver.find_element_by_css_selector('.statuslabel-label').text
+    try:
+        ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
+        print(f"{ms_status} yo over here")
+        
+        return ms_status
+    except:
+        pass
     #driver.find_element_by_xpath('//div[@class="body"]/main/section/div[@class="page-content page-server"]').text
 
 
 def get_number_of_players():
     
-    status = driver.find_element_by_css_selector('.statuslabel-label').text
+    status = get_status()
     """ Returns the number of players as a string.
         Works: When server is online--Returns 0 if offline"""
     if status == "Online":
@@ -90,10 +126,10 @@ def get_number_of_players():
         return '0'
 
 
-def get_ip():
+def get_ip():   
     """ Returns the severs IP address.
         Works: Always works"""
-    return driver.find_element_by_xpath('//span[@id="ip"]').text
+    return "sulfursurf.ploudos.me" #driver.find_element_by_xpath('//span[@id="ip"]').text
 
 
 def get_software():
@@ -105,8 +141,7 @@ def get_software():
 def get_version():
     """ Returns the server version.
         Works: Always works"""
-    return driver.find_element_by_xpath('//*[@id="version"]').text
-
+    return driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[2]/td[2]/span').text
 
 def get_tps():
     """ Returns the server TPS
@@ -121,8 +156,8 @@ def get_server_info():
     """ Returns a string of information about the server
         Returns: server_ip, server_status, number of players, software,
         version"""
-    return get_ip(), get_status(), get_number_of_players(), \
-           get_software(), get_version(), get_tps()
+    return get_ip(), get_status(), \
+           get_version()
 
 def waitUntil(condition, output): #defines function
     wU = True
@@ -132,39 +167,45 @@ def waitUntil(condition, output): #defines function
             wU = False
         time.sleep(60) #waits 60s for preformance
 
+
+#def connect_account():
+#    time.sleep(5)
+#    print(driver.title)
+#    if driver.title != "Attention Required! | Cloudflare":
+#        connect()
+#    else:
+#        recaptcha_process()
+#        time.sleep(70)
+#        #waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
+
 def connect_account():
     driver.get(URL)
-    time.sleep(5)
-    print(driver.title)
-    if driver.title != "Attention Required! | Cloudflare":
-        #connect()
-    else:
-        recaptcha_process()
-        time.sleep(70)
-        #waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
-
-def connect():
     """ Connects to the accounts through a headless chrome tab so we don't
         have to do it every time we want to start or stop the server."""
-    # login to aternos
+    # login to PloudOS
+    print(driver.title)
 
         
-    element = driver.find_element_by_xpath('//*[@id="user"]')
+    element = driver.find_element_by_xpath('//*[@name="username"]')
     element.send_keys(USER)
-    element = driver.find_element_by_xpath('//*[@id="password"]')
+    element = driver.find_element_by_xpath('//*[@name="password"]')
     element.send_keys(PASSWORD)
-    element = driver.find_element_by_xpath('//*[@id="login"]')
+    element = driver.find_element_by_xpath('//*[@class="btn btn-primary"]')
     element.click()
     
-    while driver.title != "Servers | Aternos | Free Minecraft Server":
+    while driver.title != "PloudOS.com - Your servers":
         time.sleep(5)
-        driver.refresh()
+        print(driver.title)
 
     # selects server from server list
-    element = driver.find_element_by_css_selector('.server-body')
+    element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
     element.click()
     
-    time.sleep(2)
+    while driver.title != "PloudOS.com - Manage server":
+        time.sleep(5)
+        print(driver.title)
+
+    time.sleep(12)
     
     
     #driver.find_element_by_xpath("/html/body/")
@@ -172,7 +213,7 @@ def connect():
     if adblock:
         adblockBypass()
 
-    logging.info('Aternos Tab Loaded')
+    logging.info('PloudOS Tab Loaded')
 
 
 def adblockBypass():
@@ -187,7 +228,7 @@ def adblockBypass():
 
 
 async def stop_server():
-    """ Stops server from aternos panel."""
+    """ Stops server from PloudOS panel."""
     element = driver.find_element_by_xpath("//*[@id=\"stop\"]")
     element.click()
 
@@ -199,114 +240,3 @@ def quitBrowser():
 
 def refreshBrowser():
     driver.refresh()
-
-
-def write_stat(loops, time):
-    with open('stat.csv', 'a', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=',',
-                                quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        spamwriter.writerow([loops, time])
-
-
-def check_exists_by_xpath(xpath):
-    try:
-        driver.find_element_by_xpath(xpath)
-    except NoSuchElementException:
-        return False
-    return True
-
-def wait_between(a, b):
-    rand = uniform(a, b)
-    time.sleep(rand)
-
-def dimention():
-    d = int(driver.find_element_by_xpath('//div[@id="rc-imageselect-target"]/table').get_attribute("class")[-1]);
-    return d if d else 3  # dimention is 3 by default
-
-
-# ***** main procedure to identify and submit picture solution
-def solve_images():
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "rc-imageselect-target"))
-    )
-    dim = dimention()
-    # ****************** check if there is a clicked tile ******************
-    if check_exists_by_xpath(
-            '//div[@id="rc-imageselect-target"]/table/tbody/tr/td[@class="rc-imageselect-tileselected"]'):
-        rand2 = 0
-    else:
-        rand2 = 1
-
-    # wait before click on tiles
-    wait_between(0.5, 1.0)
-    # ****************** click on a tile ******************
-    tile1 = WebDriverWait( 10).until(
-        EC.element_to_be_clickable((By.XPATH, '//div[@id="rc-imageselect-target"]/table/tbody/tr[{0}]/td[{1}]'.format(
-            randint(1, dim), randint(1, dim))))
-    )
-    tile1.click()
-    if (rand2):
-        try:
-            driver.find_element_by_xpath(
-                '//div[@id="rc-imageselect-target"]/table/tbody/tr[{0}]/td[{1}]'.format(randint(1, dim),
-                                                                                        randint(1, dim))).click()
-        except NoSuchElementException:
-            print('\n\r No Such Element Exception for finding 2nd tile')
-
-    # ****************** click on submit buttion ******************
-    driver.find_element_by_id("recaptcha-verify-button").click()
-
-def recaptcha_process():
-    print(driver.title)
-    # move the driver to the first iFrame
-    # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[0])
-    driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[0])
-
-    ids = find_elements_by_xpath("//*[@id]")
-    for ii in ids:
-        print(ii.get_attribute("id"))
-    # *************  locate CheckBox  **************
-    CheckBox = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "recaptcha-anchor"))
-        # EC.presence_of_element_located((By.CLASS_NAME, "recaptcha-checkbox-borderAnimation"))
-    )
-
-    # *************  click CheckBox  ***************
-    # making click on captcha CheckBox
-    print(driver.title)
-    CheckBox.click()
-
-    # ***************** back to main window **************************************
-    # driver.switch_to_window(mainWin)
-    driver.switch_to.window(mainWin)
-
-    wait_between(2.0, 2.5)
-
-    # ************ switch to the second iframe by tag name ******************
-    # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[1])
-    driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[1])
-    i = 1
-    while i < 300:
-        print('\n\r{0}-th loop'.format(i))
-        # ******** check if checkbox is checked at the 1st frame ***********
-        # driver.switch_to_window(mainWin)
-        driver.switch_to.window(mainWin)
-        WebDriverWait(driver, 10).until(
-            EC.frame_to_be_available_and_switch_to_it((By.TAG_NAME, 'iframe'))
-        )
-        wait_between(1.0, 2.0)
-        if check_exists_by_xpath('//span[@aria-checked="true"]'):
-            import winsound
-
-            winsound.Beep(400, 1500)
-            write_stat(i, round(time() - start) - 1)  # saving results into stat file
-            break
-
-        # driver.switch_to_window(mainWin)
-        driver.switch_to.window(mainWin)
-        # ********** To the second frame to solve pictures *************
-        wait_between(0.3, 1.5)
-        # driver.switch_to_frame(driver.find_elements_by_tag_name("iframe")[1])
-        driver.switch_to.frame(driver.find_elements_by_tag_name("iframe")[1])
-        solve_images(driver)
-        i = i + 1

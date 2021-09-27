@@ -37,8 +37,8 @@ intents = discord.Intents.default()
 allowed_mentions = discord.AllowedMentions(everyone=False, roles=False,
                                            users=True)
 description = 'A simple tool to serve your own discord bot so you can ' \
-              'manage an Aternos server from discord.'
-bot = discord.ext.commands.Bot(command_prefix='--', intents=intents,
+              'manage an PloudOS server from discord.'
+bot = discord.ext.commands.Bot(command_prefix='-', intents=intents,
                                allowed_mentions=allowed_mentions,
                                description=description,
                                case_insensitive=True,
@@ -47,10 +47,10 @@ bot = discord.ext.commands.Bot(command_prefix='--', intents=intents,
 
 @bot.event
 async def on_ready():
-    text = "Logging into Aternos... | --help"
+    text = "Logging into PloudOS..."
     await bot.change_presence(activity=discord.Game(name=text))
 
-    connect_account()  # logs into aternos
+    connect_account()  # logs into PloudOS
     logging.info(f'The bot is logged in as: {bot.user}')
     await asyncio.sleep(3)
     serverStatus.start()  # starts the presence update loop
@@ -67,7 +67,7 @@ async def launch(ctx):
     """ Launches the Minecraft Server"""
     server_status = get_status()
 
-    if server_status == "Offline":
+    if server_status == "Offline" or server_status == "Stopped":
         await ctx.send("Starting the server...")
         await start_server()
 
@@ -92,10 +92,10 @@ async def launch(ctx):
     elif server_status == "Online":
         await ctx.send("The server is already Online.")
 
-    elif server_status == "Starting ..." or server_status == "Loading ...":
+    elif server_status == "Server will be prepaired" or server_status == "Server is Starting" or server_status == "Queue":
         await ctx.send("The server is already starting...")
 
-    elif server_status == "Stopping ..." or server_status == "Saving ...":
+    elif server_status == "Stopping ..." or server_status == "Saving":
         await ctx.send("The server is stopping. Please wait.")
 
     else:
@@ -112,10 +112,10 @@ async def status(ctx):
     await ctx.send(f"The server is {get_status()}")
 
 
-@bot.command()
-async def players(ctx):
-    """ Sends the amount of players online."""
-    await ctx.send(f"There are {get_number_of_players()} players online.")
+#@bot.command()
+#async def players(ctx):
+#    """ Sends the amount of players online."""
+#    await ctx.send(f"There are {get_number_of_players()} players online.")
 
 
 @bot.command()
@@ -135,12 +135,10 @@ async def serverStatus():
     server_status = get_status()
     if server_status == "Online":
         text = f"{get_status()} | " \
-               f"Players: {get_number_of_players()} | " \
-               f"TPS: {get_tps()} | "
+               f"{get_ip()}"
     else:
         text = f"{get_status()} | " \
-               f"{get_ip()} | " \
-               f"--help"
+               f"{get_ip()}"
     activity = discord.Activity(type=discord.ActivityType.watching, name=text)
     await bot.change_presence(activity=activity)
 
@@ -156,8 +154,8 @@ async def adblockWall():
 async def stop(ctx):
     server_status = get_status()
 
-    if server_status != 'Stopping ...' and server_status != 'Saving ...' and \
-            server_status != 'Offline' and server_status != 'Loading ...':
+    if server_status != 'Stopped' and server_status != 'Saving' and \
+            server_status != 'Offline' and server_status != 'Server is Starting':
         
         if len(ctx.message.mentions) == 0:
             author = ctx.author
@@ -174,7 +172,7 @@ async def stop(ctx):
             await ctx.send(f"{author.mention}, You're not allowed to do that!")
         
 
-    elif server_status == 'Loading ...':
+    elif server_status == 'Server is Starting':
         await ctx.send(f"The server is currently loading. "
                        f"Please try again later.")
 
