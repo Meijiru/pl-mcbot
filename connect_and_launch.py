@@ -76,7 +76,7 @@ async def start_server():
         # while in queue, check for the confirm button and try click it
         
         if get_status() == "Waiting for confirmation":
-            print("cofirm")
+            #print("cofirm")
             element = ""
             while element == "":
                 time.sleep(0.5)
@@ -102,7 +102,7 @@ def get_status():
     """ Returns the status of the server as a string."""
     try:
         ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
-        print(f"{ms_status} yo over here")
+        #print(f"{ms_status} yo over here")
         
         return ms_status
     except:
@@ -195,7 +195,7 @@ def connect_account():
     
     while driver.title != "PloudOS.com - Your servers":
         time.sleep(5)
-        print(driver.title)
+        #print(driver.title)
 
     # selects server from server list
     element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
@@ -203,7 +203,7 @@ def connect_account():
     
     while driver.title != "PloudOS.com - Manage server":
         time.sleep(5)
-        print(driver.title)
+        #print(driver.title)
 
     time.sleep(12)
     
