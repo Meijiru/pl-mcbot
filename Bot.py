@@ -10,13 +10,15 @@ from dotenv import load_dotenv
 from discord.ext import tasks, commands
 
 from connect_and_launch import get_status, get_number_of_players, \
-                               get_ip, get_tps
+                               get_ip, get_tps, get_queue
 from connect_and_launch import connect_account, adblockBypass, refreshBrowser
 from connect_and_launch import start_server, stop_server
 from connect_and_launch import adblock
 from embeds import server_info_embed, help_embed
 
 from selenium.common.exceptions import ElementNotInteractableException
+
+position = ""
 
 
 # setup environment vars if .env doesn't exist
@@ -134,10 +136,14 @@ async def help(ctx):
 async def serverStatus():
     server_status = get_status()
     if server_status == "Online":
-        text = f"{get_status()} | " \
+        text = f"{server_status} | " \
+               f"{get_ip()}"
+    elif server_status == "Queued":
+        server_status == f"Queued {get_queue()}"
+        text = f"{server_status} | " \
                f"{get_ip()}"
     else:
-        text = f"{get_status()} | " \
+        text = f"{server_status} | " \
                f"{get_ip()}"
     activity = discord.Activity(type=discord.ActivityType.watching, name=text)
     await bot.change_presence(activity=activity)

@@ -76,18 +76,21 @@ async def start_server():
         await asyncio.sleep(3)
         # while in queue, check for the confirm button and try click it
         
-        if get_status() == "Waiting for confirmation":
-            #print("cofirm")
-            element = ""
-            while element == "":
-                await asyncio.sleep(3)
-                try:
-                    element = driver.find_element_by_css_selector('.btn.btn-success')
-                    element.send_keys(Keys.RETURN)
-                except:
-                    pass
+        try:
+            if get_status() == "Waiting for confirmation":
+                #print("cofirm")
+                element = ""
+                while element == "":
+                    await asyncio.sleep(3)
+                    try:
+                        element = driver.find_element_by_css_selector('.btn.btn-success')
+                        element.send_keys(Keys.RETURN)
+                    except:
+                        pass
 
-            return
+                return
+        except:
+            pass
             #driver.execute_script("arguments[0].scrollIntoView();", element)
             #driver.execute_script("arguments[0].queueServer(this,1);", element)
 
@@ -101,15 +104,27 @@ async def start_server():
 
 def get_status():
     """ Returns the status of the server as a string."""
-    ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
     try:
+        ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
         #print(f"{ms_status} yo over here")
+        
+        if ms_status == "Queue":
+            ms_status = "Queued"
         
         return ms_status
     except:
         pass
     #driver.find_element_by_xpath('//div[@class="body"]/main/section/div[@class="page-content page-server"]').text
 
+def get_queue():
+    """ Returns the status of the server as a string."""
+    try:
+        ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[3]/td[2]/span').text
+        #print(f"{ms_status} yo over here")
+        
+        return ms_status
+    except:
+        pass
 
 def get_number_of_players():
     
