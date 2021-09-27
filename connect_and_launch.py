@@ -191,7 +191,7 @@ def connect_account():
     element = driver.find_element_by_xpath('//*[@name="password"]')
     element.send_keys(PASSWORD)
     element = driver.find_element_by_xpath('//*[@class="btn btn-primary"]')
-    element.click()
+    element.send_keys(Keys.RETURN)
     
     while driver.title != "PloudOS.com - Your servers":
         time.sleep(5)
@@ -199,7 +199,7 @@ def connect_account():
 
     # selects server from server list
     element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
-    element.click()
+    element.send_keys(Keys.RETURN)
     
     while driver.title != "PloudOS.com - Manage server":
         time.sleep(5)
