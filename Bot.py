@@ -52,7 +52,7 @@ async def on_ready():
     text = "Maintenance..."
     await bot.change_presence(activity=discord.Game(name=text))
     
-    connect_account()  # logs into PloudOS
+    await connect_account()  # logs into PloudOS
     logging.info(f'The bot is logged in as: {bot.user}')
     await asyncio.sleep(3)  
     serverStatus.start()  # starts the presence update loop

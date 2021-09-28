@@ -205,7 +205,7 @@ def waitUntil(condition, output): #defines function
 #        time.sleep(70)
 #        #waitUntil(driver.title != "Attention Required! | Cloudflare", connect())
 
-def connect_account():
+async def connect_account():
     driver.get(URL)
     """ Connects to the accounts through a headless chrome tab so we don't
         have to do it every time we want to start or stop the server."""
