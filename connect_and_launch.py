@@ -223,9 +223,29 @@ def connect_account():
     while driver.title != "PloudOS.com - Your servers":
         time.sleep(5)
         #print(driver.title)
+    
+    alert = ""
+    try:
+        alert = driver.find_element_by_css_selector('.alert.alert-warning').text
+    except:
+        pass
+    
+    while alert != "":
+        time.sleep(5)
+        driver.refresh()
+        try:
+            alert = driver.find_element_by_css_selector('.alert.alert-warning').text
+        except:
+            pass
+
+            
+    except:
+        pass
+
 
     # selects server from server list
     element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
+    
     element.send_keys(Keys.RETURN)
     
     while driver.title != "PloudOS.com - Manage server":

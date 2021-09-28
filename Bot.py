@@ -49,9 +49,9 @@ bot = discord.ext.commands.Bot(command_prefix='-', intents=intents,
 
 @bot.event
 async def on_ready():
-    text = "Logging into PloudOS..."
+    text = "Maintenance..."
     await bot.change_presence(activity=discord.Game(name=text))
-
+    
     connect_account()  # logs into PloudOS
     logging.info(f'The bot is logged in as: {bot.user}')
     await asyncio.sleep(3)
