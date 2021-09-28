@@ -90,8 +90,6 @@ async def launch(ctx):
             if get_status() == "Online":
                 await ctx.send(f"{author.mention}, the server has started!")
                 break
-            elif get_status() == "Queued":
-                position = get_queue()
 
     elif server_status == "Online":
         await ctx.send("The server is already Online.")
@@ -113,7 +111,7 @@ async def launch(ctx):
 @bot.command()
 async def status(ctx):
     """ Sends the servers status"""
-    await ctx.send(f"The server is {get_status()}")
+    await ctx.send(f"The server is {get_status()} {position}")
 
 
 #@bot.command()
@@ -137,10 +135,12 @@ async def help(ctx):
 @tasks.loop(seconds=5.0)
 async def serverStatus():
     server_status = get_status()
+    position = ""
     if server_status == "Online":
         text = f"{server_status} | " \
                f"{get_ip()}"
     elif server_status == "Queued":
+        position = get_queue()
         text = f"Queued {position} | " \
                f"{get_ip()}"
     else:
