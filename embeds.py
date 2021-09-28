@@ -5,6 +5,10 @@ from connect_and_launch import get_server_info
 def server_info_embed():
     """ Generates embed object for server info"""
     ip, status, version = get_server_info()
+    if status == None:
+        status = "Maintenance"
+    
+    
     text = f"**IP:** {ip} \n" \
            f"**Status:** {status} \n" \
            f"**Version:** {version}"

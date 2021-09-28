@@ -101,9 +101,7 @@ async def launch(ctx):
         await ctx.send("The server is stopping. Please wait.")
 
     else:
-        text = "An error occurred. Either the status server is not " \
-               "responding or you didn't set the server name " \
-               "correctly.\n\nTrying to launch the server anyways."
+        text = "Server is currently under maintenance."
         await ctx.send(text)
         await start_server()
 
@@ -149,6 +147,9 @@ async def serverStatus():
     elif server_status == "Queued":
         position = get_queue()
         text = f"Queued {position} | " \
+               f"{get_ip()}"
+    elif server_status == None:
+        text = f"Maintenance | " \
                f"{get_ip()}"
     else:
         text = f"{server_status} | " \
