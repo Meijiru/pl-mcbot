@@ -54,7 +54,7 @@ async def on_ready():
     
     connect_account()  # logs into PloudOS
     logging.info(f'The bot is logged in as: {bot.user}')
-    await asyncio.sleep(3)
+    await asyncio.sleep(3)  
     serverStatus.start()  # starts the presence update loop
 
     # starts adblock loop if network adblock is on
@@ -112,8 +112,7 @@ async def launch(ctx):
 @bot.command()
 async def status(ctx):
     if get_title() == "PloudOS.com - Manage server":
-        """ Sends the servers status"""
-        if
+        """ Sends the servers status""" 
         server_status = get_status()
         position = ""
 
