@@ -237,11 +237,8 @@ def connect_account():
             alert = driver.find_element_by_css_selector('.alert.alert-warning').text
         except:
             pass
-
-            
-    except:
-        pass
-
+    
+    
 
     # selects server from server list
     element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
