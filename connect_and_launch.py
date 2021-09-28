@@ -157,7 +157,7 @@ def get_software():
 def get_version():
     """ Returns the server version.
         Works: Always works"""
-    if status == "Online":
+    if get_status() == "Online":
         return driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[4]/td[2]/span').text
     else:
         return driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[2]/td[2]/span').text
