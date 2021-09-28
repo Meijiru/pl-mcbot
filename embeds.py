@@ -12,7 +12,7 @@ def server_info_embed():
     text = f"**IP:** {ip} \n" \
            f"**Status:** {status} \n" \
            f"**Version:** {version}"
-    if get_title() == "PloudOS.com - Manage server":
+    if get_title() != "PloudOS.com - Manage server":
         text = f"**IP:** {ip} \n" \
             f"**Status:** Maintenance \n" \
             f"**Version:** Unknown"
