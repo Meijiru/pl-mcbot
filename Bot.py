@@ -70,7 +70,7 @@ async def launch(ctx):
     server_status = get_status()
 
     if server_status == "Offline" or server_status == "Stopped":
-        await ctx.send("Starting the server. \n This might take a while...")
+        await ctx.send("Starting the server. \n      This might take a while...")
         await start_server()
 
         # if pinging a person, server will ping them when launching
@@ -111,7 +111,14 @@ async def launch(ctx):
 @bot.command()
 async def status(ctx):
     """ Sends the servers status"""
-    await ctx.send(f"The server is {get_status()} {position}")
+    server_status = get_status()
+    position = ""
+
+    if server_status == "Queued":
+        position = get_queue()
+        await ctx.send(f"The server is Queued {position}")
+    else:
+        await ctx.send(f"The server is {get_status()}")
 
 
 #@bot.command()

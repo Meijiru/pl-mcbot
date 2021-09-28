@@ -175,7 +175,15 @@ def get_server_info():
     """ Returns a string of information about the server
         Returns: server_ip, server_status, number of players, software,
         version"""
-    return get_ip(), get_status(), \
+        
+    server_status = get_status()
+    position = ""
+
+    if server_status == "Queued":
+        position = get_queue()
+        server_status = f"Queued {position}"
+    
+    return get_ip(), server_status, \
            get_version()
 
 def waitUntil(condition, output): #defines function
