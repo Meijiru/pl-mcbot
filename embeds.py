@@ -1,5 +1,5 @@
 from discord import Embed
-from connect_and_launch import get_server_info
+from connect_and_launch import get_server_info, get_title
 
 
 def server_info_embed():
@@ -12,6 +12,11 @@ def server_info_embed():
     text = f"**IP:** {ip} \n" \
            f"**Status:** {status} \n" \
            f"**Version:** {version}"
+    if get_title() == "PloudOS.com - Manage server":
+        text = f"**IP:** {ip} \n" \
+            f"**Status:** Maintenance \n" \
+            f"**Version:** Unknown"
+    
     embed = Embed()
     embed.add_field(name="Server Info", value=text, inline=False)
     return embed

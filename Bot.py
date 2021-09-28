@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from discord.ext import tasks, commands
 
 from connect_and_launch import get_status, get_number_of_players, \
-                               get_ip, get_tps, get_queue
+                               get_ip, get_tps, get_queue , get_title
 from connect_and_launch import connect_account, adblockBypass, refreshBrowser
 from connect_and_launch import start_server, stop_server
 from connect_and_launch import adblock
@@ -66,57 +66,62 @@ async def on_ready():
 
 @bot.command()
 async def launch(ctx):
-    """ Launches the Minecraft Server"""
-    server_status = get_status()
+    if get_title() == "PloudOS.com - Manage server":
+        """ Launches the Minecraft Server"""
+        server_status = get_status()
 
-    if server_status == "Offline" or server_status == "Stopped":
-        await ctx.send("Starting the server. \n      This might take a while...")
-        await start_server()
+        if server_status == "Offline" or server_status == "Stopped":
+            await ctx.send("Starting the server. \n      This might take a while...")
+            await start_server()
 
-        # if pinging a person, server will ping them when launching
-        # else ping the the user who sent the command on launch
-        if len(ctx.message.mentions) == 0:
-            author = ctx.author
+            # if pinging a person, server will ping them when launching
+            # else ping the the user who sent the command on launch
+            if len(ctx.message.mentions) == 0:
+                author = ctx.author
+            else:
+                author = ctx.message.mentions[0]
+
+            # logs event to console
+            logging.info(f'Server launched by: '
+                        f'{author.name}#{author.discriminator}')
+
+            # loops until server has started and pings person who launched
+            while True:
+                await asyncio.sleep(5)
+                if get_status() == "Online":
+                    await ctx.send(f"{author.mention}, the server has started!")
+                    break
+
+        elif server_status == "Online":
+            await ctx.send("The server is already Online.")
+
+        elif server_status == "Server will be prepaired" or server_status == "Server is starting" or server_status == "Queue":
+            await ctx.send("The server is already starting...")
+
+        elif server_status == "Stopping ..." or server_status == "Saving":
+            await ctx.send("The server is stopping. Please wait.")
+
         else:
-            author = ctx.message.mentions[0]
+            text = "Server is currently under maintenance."
+            await ctx.send(text)
+            await start_server()
 
-        # logs event to console
-        logging.info(f'Server launched by: '
-                     f'{author.name}#{author.discriminator}')
 
-        # loops until server has started and pings person who launched
-        while True:
-            await asyncio.sleep(5)
-            if get_status() == "Online":
-                await ctx.send(f"{author.mention}, the server has started!")
-                break
-
-    elif server_status == "Online":
-        await ctx.send("The server is already Online.")
-
-    elif server_status == "Server will be prepaired" or server_status == "Server is starting" or server_status == "Queue":
-        await ctx.send("The server is already starting...")
-
-    elif server_status == "Stopping ..." or server_status == "Saving":
-        await ctx.send("The server is stopping. Please wait.")
-
-    else:
-        text = "Server is currently under maintenance."
-        await ctx.send(text)
-        await start_server()
 
 
 @bot.command()
 async def status(ctx):
-    """ Sends the servers status"""
-    server_status = get_status()
-    position = ""
+    if get_title() == "PloudOS.com - Manage server":
+        """ Sends the servers status"""
+        if
+        server_status = get_status()
+        position = ""
 
-    if server_status == "Queued":
-        position = get_queue()
-        await ctx.send(f"The server is Queued {position}")
-    else:
-        await ctx.send(f"The server is {get_status()}")
+        if server_status == "Queued":
+            position = get_queue()
+            await ctx.send(f"The server is Queued {position}")
+        else:
+            await ctx.send(f"The server is {get_status()}")
 
 
 #@bot.command()
@@ -134,26 +139,31 @@ async def info(ctx):
 @bot.command()
 async def help(ctx):
     """ Help Command"""
-    await ctx.send(embed=help_embed())
+    if get_title() == "PloudOS.com - Manage server":
+        await ctx.send(embed=help_embed())
 
 
 @tasks.loop(seconds=5.0)
 async def serverStatus():
-    server_status = get_status()
-    position = ""
-    if server_status == "Online":
-        text = f"{server_status} | " \
-               f"{get_ip()}"
-    elif server_status == "Queued":
-        position = get_queue()
-        text = f"Queued {position} | " \
-               f"{get_ip()}"
-    elif server_status == None:
-        text = f"Maintenance | " \
-               f"{get_ip()}"
+    if get_title() == "PloudOS.com - Manage server":
+        server_status = get_status()
+        position = ""
+        if server_status == "Online":
+            text = f"{server_status} | " \
+                f"{get_ip()}"
+        elif server_status == "Queued":
+            position = get_queue()
+            text = f"Queued {position} | " \
+                f"{get_ip()}"
+        elif server_status == None:
+            text = f"Maintenance | " \
+                f"{get_ip()}"
+        else:
+            text = f"{server_status} | " \
+                f"{get_ip()}"
     else:
-        text = f"{server_status} | " \
-               f"{get_ip()}"
+        pass
+
     activity = discord.Activity(type=discord.ActivityType.watching, name=text)
     await bot.change_presence(activity=activity)
 
@@ -167,32 +177,34 @@ async def adblockWall():
 
 @bot.command()
 async def stop(ctx):
-    server_status = get_status()
+    if get_title() == "PloudOS.com - Manage server":
+        server_status = get_status()
 
-    if server_status != 'Stopped' and server_status != 'Saving' and \
-            server_status != 'Offline' and server_status != 'Server is starting':
-        
-        if len(ctx.message.mentions) == 0:
-            author = ctx.author
+        if server_status != 'Stopped' and server_status != 'Saving' and \
+                server_status != 'Offline' and server_status != 'Server is starting':
+            
+            if len(ctx.message.mentions) == 0:
+                author = ctx.author
+            else:
+                author = ctx.message.mentions[0]
+
+            if author.name == "NyceTurtle":
+                await ctx.send("Stopping the server...")
+                await stop_server()
+                # logs event to console
+                logging.info(f'Server stopped by: '
+                            f'{ctx.author.name}#{ctx.author.discriminator}')
+            else:
+                await ctx.send(f"{author.mention}, You're not allowed to do that!")
+            
+
+        elif server_status == 'Server is starting':
+            await ctx.send(f"The server is currently loading. "
+                        f"Please try again later.")
+
         else:
-            author = ctx.message.mentions[0]
-
-        if author.name == "NyceTurtle":
-            await ctx.send("Stopping the server...")
-            await stop_server()
-            # logs event to console
-            logging.info(f'Server stopped by: '
-                        f'{ctx.author.name}#{ctx.author.discriminator}')
-        else:
-            await ctx.send(f"{author.mention}, You're not allowed to do that!")
-        
-
-    elif server_status == 'Server is starting':
-        await ctx.send(f"The server is currently loading. "
-                       f"Please try again later.")
-
-    else:
-        await ctx.send("The server is already Offline.")
+            await ctx.send("The server is already Offline.")
+    
 
 @tasks.loop(hours=1.0)
 async def resetBrowser():

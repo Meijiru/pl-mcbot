@@ -57,7 +57,7 @@ async def start_server():
         doesn't, it continues to loop until the confirm button is clicked."""
     element = ""
     while element == "":
-        time.sleep(0.5)
+        await asyncio.sleep(.5)
         try:
             element = driver.find_element_by_css_selector('.btn.btn-success')
             element.send_keys(Keys.RETURN)
@@ -221,7 +221,7 @@ def connect_account():
     element.send_keys(Keys.RETURN)
     
     while driver.title != "PloudOS.com - Your servers":
-        time.sleep(5)
+        await asyncio.sleep(5)
         #print(driver.title)
     
     alert = ""
@@ -231,13 +231,13 @@ def connect_account():
         pass
     
     while alert != "":
-        time.sleep(5)
+        await asyncio.sleep(5)
         driver.refresh()
         try:
             alert = driver.find_element_by_css_selector('.alert.alert-warning').text
         except:
             pass
-    
+
     
 
     # selects server from server list
@@ -246,10 +246,10 @@ def connect_account():
     element.send_keys(Keys.RETURN)
     
     while driver.title != "PloudOS.com - Manage server":
-        time.sleep(5)
+        await asyncio.sleep(5)
         #print(driver.title)
 
-    time.sleep(12)
+    await asyncio.sleep(12)
     
     
     #driver.find_element_by_xpath("/html/body/")
@@ -258,6 +258,11 @@ def connect_account():
         adblockBypass()
 
     logging.info('PloudOS Tab Loaded')
+
+
+def get_title():
+
+    return driver.title
 
 
 def adblockBypass():
