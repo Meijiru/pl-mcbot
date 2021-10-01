@@ -101,11 +101,15 @@ async def start_server():
             
         
 
+def get_title():
+    return driver.title
 
 def get_status():
     """ Returns the status of the server as a string."""
+    #print(driver.current_url)
+    #print(ms_status)
     try:
-        ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
+        ms_status = driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr/td[2]/span').text
         #print(f"{ms_status} yo over here")
         
         if ms_status == "Queue":
@@ -113,7 +117,7 @@ def get_status():
         
         return ms_status
     except:
-        pass
+        return None
     #driver.find_element_by_xpath('//div[@class="body"]/main/section/div[@class="page-content page-server"]').text
 
 def get_queue():
@@ -250,6 +254,7 @@ async def connect_account():
         #print(driver.title)
 
     await asyncio.sleep(12)
+    print(driver.title)
     
     
     #driver.find_element_by_xpath("/html/body/")
@@ -260,9 +265,6 @@ async def connect_account():
     logging.info('PloudOS Tab Loaded')
 
 
-def get_title():
-
-    return driver.title
 
 
 def adblockBypass():

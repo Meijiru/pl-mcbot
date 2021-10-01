@@ -70,7 +70,7 @@ async def launch(ctx):
         """ Launches the Minecraft Server"""
         server_status = get_status()
 
-        if server_status == "Offline" or server_status == "Stopped":
+        if server_status == "Offline" or server_status == "Stopped" or server_status == "":
             await ctx.send("Starting the server. \n      This might take a while...")
             await start_server()
 
@@ -105,6 +105,8 @@ async def launch(ctx):
             text = "Server is currently under maintenance."
             await ctx.send(text)
             await start_server()
+    else:
+        ctx.send("Bot is currently under maintenance.")
 
 
 
@@ -121,6 +123,8 @@ async def status(ctx):
             await ctx.send(f"The server is Queued {position}")
         else:
             await ctx.send(f"The server is {get_status()}")
+    else:
+        ctx.send("Bot is currently under maintenance.") 
 
 
 #@bot.command()
@@ -138,33 +142,34 @@ async def info(ctx):
 @bot.command()
 async def help(ctx):
     """ Help Command"""
-    if get_title() == "PloudOS.com - Manage server":
-        await ctx.send(embed=help_embed())
+    await ctx.send(embed=help_embed())
 
 
 @tasks.loop(seconds=5.0)
 async def serverStatus():
-    if get_title() == "PloudOS.com - Manage server":
-        server_status = get_status()
-        position = ""
-        if server_status == "Online":
-            text = f"{server_status} | " \
-                f"{get_ip()}"
-        elif server_status == "Queued":
-            position = get_queue()
-            text = f"Queued {position} | " \
-                f"{get_ip()}"
-        elif server_status == None:
-            text = f"Maintenance | " \
-                f"{get_ip()}"
-        else:
-            text = f"{server_status} | " \
-                f"{get_ip()}"
+    server_status = get_status()
+    
+    if get_title() != "PloudOS.com - Manage server":
+        server_status = None
+    
+    position = ""
+    if server_status == "Online":
+        text = f"{server_status} | " \
+            f"{get_ip()}"
+    elif server_status == "Queued":
+        position = get_queue()
+        text = f"Queued {position} | " \
+            f"{get_ip()}"
+    elif server_status == None:
+        text = f"Maintenance | " \
+            f"{get_ip()}"
     else:
-        pass
-
+        text = f"{server_status} | " \
+            f"{get_ip()}"
+    
     activity = discord.Activity(type=discord.ActivityType.watching, name=text)
     await bot.change_presence(activity=activity)
+
 
 
 @tasks.loop(seconds=5.0)
@@ -203,6 +208,8 @@ async def stop(ctx):
 
         else:
             await ctx.send("The server is already Offline.")
+    else:
+        ctx.send("Bot is currently under maintenance.")
     
 
 @tasks.loop(hours=1.0)
