@@ -40,8 +40,10 @@ options.add_argument("--disable-blink-features=AutomationControlled")
 options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--no-sandbox")
+options.add_argument('--disable-gpu')
+options.binary_location = GOOGLE_CHROME_PATH
 
-driver = uc.Chrome(options=options,executable_path=os.environ.get("CHROMEDRIVER_PATH"))
+browser = webdriver.Chrome(execution_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
 
 
 async def start_server():
@@ -215,7 +217,7 @@ async def connect_account():
     element = driver.find_element_by_xpath('//*[@class="button is-medium is-info is-fullwidth"]')
     element.send_keys(Keys.RETURN)
     
-    while driver.title != "PloudOS.com - Your servers":
+    while driver.title != "Server Selection - minefort.com":
         await asyncio.sleep(5)
         #print(driver.title)
     
