@@ -91,8 +91,8 @@ async def start_server():
             #while element == "":
             #    time.sleep(0.5)
             #    element = driver.find_element_by_css_selector('.btn.btn-success')
-
             
+        
 
 def get_title():
     return driver.title
@@ -101,16 +101,21 @@ def get_status():
     """ Returns the status of the server as a string."""
     #print(driver.current_url)
     #print(ms_status)
-    ms_status = driver.find_element_by_xpath('//*[@class="label label-info"]').text
-    #ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
+    
+    ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
+    
+    num_tries = 8
+    
     while ms_status == "":
+        num_tries -= 1
+
         try:
-            ms_status = driver.find_element_by_xpath('//*[@class="label label-info"]').text
+            ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
         except:
-            try:
-                ms_status = driver.find_element_by_xpath('//*[@class="label label-info"]').text
-            except:
-                pass
+            pass
+        
+        if num_tries <= 0:
+            break
     
 
     #print(ms_status)
