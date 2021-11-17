@@ -41,7 +41,7 @@ options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-gpu")
 
-driver = uc.Chrome(options=options,executable_path=os.environ.get("CHROMEDRIVER_PATH"))
+driver = webdriver.Chrome(options=options,executable_path=os.environ.get("CHROMEDRIVER_PATH"))
 
 
 async def start_server():
