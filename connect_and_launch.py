@@ -2,7 +2,6 @@ import asyncio
 import time
 import os
 import logging
-import undetected_chromedriver as uc
 
 from selenium import webdriver
 from selenium.common.exceptions import ElementNotInteractableException, \
