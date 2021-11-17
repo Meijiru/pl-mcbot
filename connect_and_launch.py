@@ -19,9 +19,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 load_dotenv()
-USER = "turtlecutillar@gmail.com"
+USER = "sulfur"
 PASSWORD = "Apr72006"
-URL = "https://minefort.com/authenticate"
+URL = "https://ploudos.com/login/"
 
 # chrome variables
 adblock = False  # for those with network wide ad blockers
@@ -39,10 +39,9 @@ options.add_argument("--disable-blink-features=AutomationControlled")
 options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--no-sandbox")
-options.add_argument('--disable-gpu')
-options.binary_location = GOOGLE_CHROME_PATH
+options.add_argument("--disable-gpu")
 
-browser = webdriver.Chrome(execution_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
+driver = uc.Chrome(options=options,executable_path=os.environ.get("CHROMEDRIVER_PATH"))
 
 
 async def start_server():
@@ -209,14 +208,14 @@ async def connect_account():
     print(driver.title)
 
         
-    element = driver.find_element_by_xpath('//*[@placeholder="Email Address"]')
+    element = driver.find_element_by_xpath('//*[@name="username"]')
     element.send_keys(USER)
-    element = driver.find_element_by_xpath('//*[@placeholder="Password"]')
+    element = driver.find_element_by_xpath('//*[@name="password"]')
     element.send_keys(PASSWORD)
-    element = driver.find_element_by_xpath('//*[@class="button is-medium is-info is-fullwidth"]')
+    element = driver.find_element_by_xpath('//*[@class="btn btn-primary"]')
     element.send_keys(Keys.RETURN)
     
-    while driver.title != "Server Selection - minefort.com":
+    while driver.title != "PloudOS.com - Your servers":
         await asyncio.sleep(5)
         #print(driver.title)
     
