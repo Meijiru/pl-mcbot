@@ -7,9 +7,9 @@ import undetected_chromedriver as uc
 from selenium import webdriver
 from selenium.common.exceptions import ElementNotInteractableException, \
                                        NoSuchElementException, StaleElementReferenceException
+                                       
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions
 
 from dotenv import load_dotenv
 import re, csv
@@ -20,9 +20,9 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 load_dotenv()
-USER = "sulfur"
+USER = "turtlecutillar@gmail.com"
 PASSWORD = "Apr72006"
-URL = "https://ploudos.com/login/"
+URL = "https://minefort.com/authenticate"
 
 # chrome variables
 adblock = False  # for those with network wide ad blockers
@@ -43,13 +43,6 @@ options.add_argument("--no-sandbox")
 
 driver = uc.Chrome(options=options,executable_path=os.environ.get("CHROMEDRIVER_PATH"))
 
-def waitUntil(condition, output): #defines function
-    wU = True
-    while wU == True:
-        if condition: #checks the condition
-            output
-            wU = False
-        time.sleep(60) #waits 60s for preformance
 
 async def start_server():
     """ Starts the server by clicking on the start button.
@@ -108,16 +101,21 @@ def get_status():
     """ Returns the status of the server as a string."""
     #print(driver.current_url)
     #print(ms_status)
-    try:
-        ms_status = driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr/td[2]/span').text
-        #print(f"{ms_status} yo over here")
-        
-        if ms_status == "Queue":
-            ms_status = "Queued"
-        
-        return ms_status
-    except:
-        return None
+    
+    ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
+    while ms_status == "":
+        try:
+            ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
+        except:
+            pass
+    
+
+    print(ms_status)
+    if ms_status == "Queue":
+        ms_status = "Queued"
+            
+    return ms_status
+
     #driver.find_element_by_xpath('//div[@class="body"]/main/section/div[@class="page-content page-server"]').text
 
 def get_queue():
@@ -146,7 +144,7 @@ def get_number_of_players():
         return '0'
 
 
-def get_ip():   
+def get_ip():
     """ Returns the severs IP address.
         Works: Always works"""
     return "sulfursurf.ploudos.me" #driver.find_element_by_xpath('//span[@id="ip"]').text
@@ -190,13 +188,6 @@ def get_server_info():
     return get_ip(), server_status, \
            get_version()
 
-def waitUntil(condition, output): #defines function
-    wU = True
-    while wU == True:
-        if condition: #checks the condition
-            output
-            wU = False
-        time.sleep(60) #waits 60s for preformance
 
 
 #def connect_account():
@@ -217,11 +208,11 @@ async def connect_account():
     print(driver.title)
 
         
-    element = driver.find_element_by_xpath('//*[@name="username"]')
+    element = driver.find_element_by_xpath('//*[@placeholder="Email Address"]')
     element.send_keys(USER)
-    element = driver.find_element_by_xpath('//*[@name="password"]')
+    element = driver.find_element_by_xpath('//*[@placeholder="Password"]')
     element.send_keys(PASSWORD)
-    element = driver.find_element_by_xpath('//*[@class="btn btn-primary"]')
+    element = driver.find_element_by_xpath('//*[@class="button is-medium is-info is-fullwidth"]')
     element.send_keys(Keys.RETURN)
     
     while driver.title != "PloudOS.com - Your servers":
@@ -253,7 +244,7 @@ async def connect_account():
         await asyncio.sleep(5)
         #print(driver.title)
 
-    await asyncio.sleep(12)
+    time.sleep(12)
     print(driver.title)
     
     
