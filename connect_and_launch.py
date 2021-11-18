@@ -102,25 +102,29 @@ def get_status():
     #print(driver.current_url)
     #print(ms_status)
     
-    ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
-    
-    num_tries = 8
-    
-    while ms_status == "":
-        num_tries -= 1
-
-        try:
-            ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
-        except:
-            pass
+    ms_status = ""
+    try:
+        ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
         
-        if num_tries <= 0:
-            break
-    
+        num_tries = 8
+        
+        while ms_status == "":
+            num_tries -= 1
 
-    #print(ms_status)
-    if ms_status == "Queue":
-        ms_status = "Queued"
+            try:
+                ms_status =  driver.find_element_by_xpath('//*[@id="status"]/table/tbody/tr[1]/td[2]/span').text
+            except:
+                pass
+            
+            if num_tries <= 0:
+                break
+        
+
+        #print(ms_status)
+        if ms_status == "Queue":
+            ms_status = "Queued"
+    except:
+        pass
             
     return ms_status
 
