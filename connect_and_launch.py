@@ -19,7 +19,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 load_dotenv()
-USER = "sulfur"
+USER = "11XavierServer"
 PASSWORD = "Apr72006"
 URL = "https://ploudos.com/login/"
 

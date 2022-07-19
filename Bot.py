@@ -28,7 +28,7 @@ position = ""
 
 # load environment vars
 #load_dotenv()
-BOT_TOKEN = "ODkxMTk0NDUxMzc5MjI4Njky.YU6zgg.szVwrEUjG4yYHPxw9qnYDAP389Q"
+BOT_TOKEN = "OTk4ODQzMTA0MTUwOTU0MDY0.G5OOLO.d8OL5aKj1FCY4xamXIcrMimduNzf5figaxZ4Fk"
 
 # setup logger
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s',
@@ -154,18 +154,14 @@ async def serverStatus():
     
     position = ""
     if server_status == "Online":
-        text = f"{server_status} | " \
-            f"{get_ip()}"
+        text = f"{server_status} | -help"
     elif server_status == "Queued":
         position = get_queue()
-        text = f"Queued {position} | " \
-            f"{get_ip()}"
+        text = f"Queued {position} | -help"
     elif server_status == None:
-        text = f"Maintenance | " \
-            f"{get_ip()}"
+        text = f"Maintenance | -help"
     else:
-        text = f"{server_status} | " \
-            f"{get_ip()}"
+        text = f"{server_status} | -help"
     
     activity = discord.Activity(type=discord.ActivityType.watching, name=text)
     await bot.change_presence(activity=activity)
