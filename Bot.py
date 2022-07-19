@@ -28,7 +28,7 @@ position = ""
 
 # load environment vars
 #load_dotenv()
-BOT_TOKEN = "OTk4ODQzMTA0MTUwOTU0MDY0.G5OOLO.d8OL5aKj1FCY4xamXIcrMimduNzf5figaxZ4Fk"
+BOT_TOKEN = "ODkxMTk0NDUxMzc5MjI4Njky.GkyfYQ.m1mHQyhXePvFV9L8UCHEeVmHDWw1Wi59Tsy2YI"
 
 # setup logger
 logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(message)s',
