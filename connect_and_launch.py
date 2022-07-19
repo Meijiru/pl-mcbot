@@ -229,7 +229,7 @@ async def connect_account():
     
     while driver.title != "PloudOS.com - Your servers":
         await asyncio.sleep(5)
-        #print(driver.title)
+        print(driver.title)
     
     alert = ""
     try:
