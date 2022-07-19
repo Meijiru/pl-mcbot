@@ -227,9 +227,9 @@ async def connect_account():
     element = driver.find_element_by_xpath('//*[@class="btn btn-primary"]')
     element.send_keys(Keys.RETURN)
     
-    while driver.title != "PloudOS.com - Your servers":
+    while driver.current_url != "https://ploudos.com/server/":
         await asyncio.sleep(5)
-        print(driver.current_url)
+        # print(driver.current_url)
     
     alert = ""
     try:
