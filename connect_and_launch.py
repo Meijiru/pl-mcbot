@@ -238,8 +238,8 @@ async def connect_account():
         pass
     
     while alert != "":
-        await asyncio.sleep(5)
         driver.refresh()
+        await asyncio.sleep(5)
         try:
             alert = driver.find_element_by_css_selector('.alert.alert-warning').text
         except:
@@ -248,7 +248,7 @@ async def connect_account():
     
 
     # selects server from server list
-    element = driver.find_element_by_class_name('btn.btn-success.btn-xs')
+    element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
     
     element.send_keys(Keys.RETURN)
     
