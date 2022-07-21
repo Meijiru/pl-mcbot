@@ -248,7 +248,7 @@ async def connect_account():
     
 
     # selects server from server list
-    element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
+    element = driver.find_element_by_class_name('btn btn-success btn-xs')
     
     element.send_keys(Keys.RETURN)
     
