@@ -244,26 +244,12 @@ async def connect_account():
             alert = driver.find_element_by_css_selector('.alert.alert-warning').text
         except:
             pass
-
+    
+    await asyncio.sleep(12)
     
 
     # selects server from server list
-    element_text = ""
-    element = ""
-    try:
-        element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
-        element_text = element.text
-    except:
-        pass
-    
-    while element != "":
-        driver.refresh()
-        await asyncio.sleep(5)
-        try:
-            element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
-            element_text = element.text
-        except:
-            pass
+    element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
     
     element.send_keys(Keys.RETURN)
     
