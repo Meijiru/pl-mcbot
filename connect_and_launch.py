@@ -261,7 +261,10 @@ async def connect_account():
             tries = 0
             driver.refresh()
         
-        element_text = element.text
+        try:
+            element_text = element.text
+        except:
+            pass
         print(element_text)
         print("[-----]")
 
