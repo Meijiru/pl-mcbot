@@ -249,7 +249,7 @@ async def connect_account():
     tries = 0
     element_text = ""
     element = ""
-    while element_text != "Manage":
+    while element_text != "Manage   ":
         await asyncio.sleep(5)
         try:
             element = driver.find_element_by_xpath("//*[text()='Manage']") #find_element_by_css_selector('.btn.btn-success.btn-xs')
@@ -259,7 +259,9 @@ async def connect_account():
         
         tries += 1
         if tries > 5:
+            tries = 0
             driver.refresh()
+        
         print(element_text)
         print("[-----]")
 
