@@ -246,6 +246,7 @@ async def connect_account():
             pass
     
     
+    tries = 0
     element_text = ""
     element = ""
     while element_text == "":
@@ -255,6 +256,10 @@ async def connect_account():
             element_text = element.text
         except:
             pass
+        
+        tries += 1
+        if tries > 5:
+            driver.refresh()
         print(element_text)
         print("[-----]")
 
