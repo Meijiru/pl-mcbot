@@ -253,7 +253,6 @@ async def connect_account():
         await asyncio.sleep(5)
         try:
             element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
-            element_text = element.text
         except:
             pass
         
@@ -262,6 +261,7 @@ async def connect_account():
             tries = 0
             driver.refresh()
         
+        element_text = element.text
         print(element_text)
         print("[-----]")
 
