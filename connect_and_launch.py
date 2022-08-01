@@ -248,7 +248,7 @@ async def connect_account():
     
     element_text = ""
     element = ""
-    while element_text != "":
+    while element_text == "":
         await asyncio.sleep(5)
         try:
             element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
