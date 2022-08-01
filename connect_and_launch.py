@@ -255,11 +255,11 @@ async def connect_account():
             element_text = element.text
         except:
             pass
+        print(element_text)
+        print("[-----]")
 
     # selects server from server list
     
-    print(element_text)
-    print("next")
     element.send_keys(Keys.RETURN)
     
     while driver.title != "PloudOS.com - Manage server":
