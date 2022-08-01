@@ -252,14 +252,14 @@ async def connect_account():
         await asyncio.sleep(5)
         try:
             element = driver.find_element_by_css_selector('.btn.btn-success.btn-xs')
+            element_text = element.text
         except:
             pass
-        
-        element_text = element.text
-        print(element_text)
 
     # selects server from server list
     
+    print(element_text)
+    print("next")
     element.send_keys(Keys.RETURN)
     
     while driver.title != "PloudOS.com - Manage server":
