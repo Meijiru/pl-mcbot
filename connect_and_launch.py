@@ -266,8 +266,9 @@ async def connect_account():
         except:
             pass
         print(element_text)
-        print("[-----]")
-
+        print(driver.current_url)
+        print("----------")
+        print("")
     # selects server from server list
     
     element.send_keys(Keys.RETURN)
