@@ -4,6 +4,7 @@ import os
 import logging
 
 from selenium import webdriver
+import undetected_chromedriver.v2 as uc
 from selenium.common.exceptions import ElementNotInteractableException, \
                                        NoSuchElementException, StaleElementReferenceException
                                        
@@ -41,7 +42,7 @@ options.add_argument("--disable-dev-shm-usage")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-gpu")
 
-driver = webdriver.Chrome(options=options,executable_path=str(os.environ.get('CHROMEDRIVER_PATH')))
+driver = uc.Chrome(options=options,executable_path=str(os.environ.get('CHROMEDRIVER_PATH')))
 
 
 async def start_server():
