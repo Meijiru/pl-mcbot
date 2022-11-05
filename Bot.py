@@ -1,12 +1,12 @@
-import discord
+import discord  
 import os
 import sys
 import asyncio
 import logging
 
-client = discord.Client()
+client = discord.Client(intents=discord.Intents.default())
 
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from discord.ext import tasks, commands
 
 from connect_and_launch import get_status, get_number_of_players, \
