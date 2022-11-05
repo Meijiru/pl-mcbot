@@ -4,7 +4,7 @@ import os
 import logging
 
 from selenium import webdriver
-import undetected_chromedriver.v2 as uc
+import undetected_chromedriver as uc
 from selenium.common.exceptions import ElementNotInteractableException, \
                                        NoSuchElementException, StaleElementReferenceException
                                        
