@@ -257,7 +257,7 @@ async def connect_account():
             pass
 
         print(element_text)
-        print(driver.current_url)
+        print(driver.title)
         print("----------")
         print("")
     # selects server from server list
